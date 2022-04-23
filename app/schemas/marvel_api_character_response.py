@@ -1,0 +1,4 @@
+
+
+class MarvelAPICharacterResponse:
+    pass
