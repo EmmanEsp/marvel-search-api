@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: marvel-search-api
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    environment:
+      - marvel_base_url=placeholder
+      - marvel_private_key=placeholder
+      - marvel_public_key=placeholder
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
