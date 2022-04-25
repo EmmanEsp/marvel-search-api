@@ -1,11 +1,12 @@
 import urllib.parse
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 
 from app.infraestructure import marvel_request
 from app.schemas.marvel_character_response import MarvelCharacterResponse
 from app.schemas.marvel_comic_response import MarvelComicResponse
 from app.schemas.marvel_search_query_params import MarvelSearchQueryParams
+from app.schemas.validate_comic_response import ValidateComicResponse
 from app.settings.marvel_settings import MarvelSettings
 
 _character_resource = "characters"
@@ -151,3 +152,14 @@ def get_marvel_data(query_params: MarvelSearchQueryParams, marvel_settings: Marv
         marvel_settings=marvel_settings,
     )
     return result
+
+
+def validate_comic(comic_id: int, marvel_settings: MarvelSettings):
+    query = f"{_comic_resource}/{comic_id}"
+    response = marvel_request.send(
+        query_request=query,
+        marvel_settings=marvel_settings,
+    )
+    if response["code"] != status.HTTP_200_OK:
+        return ValidateComicResponse(isValid=False)
+    return ValidateComicResponse(isValid=True)
