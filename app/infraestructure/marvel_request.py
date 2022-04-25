@@ -2,6 +2,7 @@ import hashlib
 import time
 
 import requests
+from fastapi import HTTPException, status
 
 from app.settings.marvel_settings import MarvelSettings
 
@@ -24,5 +25,7 @@ def send(query_request: str, marvel_settings: MarvelSettings):
     response = requests.get(
         url=url,
         params=auth_payload
-    )
-    return response.json()
+    ).json()
+    if response["code"] != status.HTTP_200_OK:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=response)
+    return response

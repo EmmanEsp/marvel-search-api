@@ -1,17 +1,25 @@
 version: '3.7'
 
+networks:
+  app-net:
+    name: marvelnet
+    driver: bridge
+
 services:
-  app:
+  marvel-search-api:
+    hostname: marvel-search-api
     build:
       context: .
       dockerfile: .docker/Dockerfile
     image: marvel-search-api
     command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
     environment:
-      - marvel_base_url=placeholder
-      - marvel_private_key=placeholder
-      - marvel_public_key=placeholder
+      - marvel_base_url=https://gateway.marvel.com:443/v1/public/
+      - marvel_private_key=b616734b82566526d527099471c67862b9ec19b5
+      - marvel_public_key=6d1141f8d2cf2f79b91938ee4b1939b5
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8002:8000"
+    networks:
+      - app-net
